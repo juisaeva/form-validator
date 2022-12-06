@@ -19,11 +19,16 @@ function showSuccess(input) {
 }
 
 //проверка валидности почты
-function isValidEmail(email) {
+function checkEmail(input) {
   const re =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  return re.test(String(email).toLowerCase());
+    if(re.test(input.value.trim( ))) {
+        showSuccess(input);
+    } else {
+        showError(input, 'Почта введена неправильно')
+    }
+ 
 }
 
 //функция проверки обязательных полей для ввода
@@ -39,9 +44,32 @@ function checkRequired(inputArr) {
     });
 }
 
+//функция проверки длины введеных данных
+function checkLength(input, min, max) {
+    if(input.value.length < min) {
+        showError(input, `Не менее ${min} символов`);
+
+    } else if(input.value.length > max) {
+        showError(input, `Не более ${max} символов`);
+
+    } else {
+        showSuccess(input);
+    }
+}
+
+//функцияб, проверяющая совпадают ли пароли
+function checkPasswordsMatch(input1, input2) {
+    if(input1.value !== input2.value) {
+        showError(input2, 'Пароли не совпадают');
+    }
+}
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
   checkRequired([username, email, password, confirmPassword]);
+  checkLength(username, 5, 15);
+  checkLength(password, 6, 25);
+  checkEmail(email);
+  checkPasswordsMatch(password, confirmPassword);
 });
